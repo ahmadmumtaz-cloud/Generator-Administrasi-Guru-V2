@@ -1,0 +1,296 @@
+
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Card, Input, Button, DataListInput, Select, ProgressModal } from '../../components/UI';
+import { generateTextContentStream } from '../../services/geminiService';
+import { Sparkles, CheckSquare, Square, Calendar, Building2 } from 'lucide-react';
+import { SUBJECTS, TEACHERS } from '../../utils/data';
+
+const DOC_TYPES = [
+  'Modul Ajar',
+  'Analisis CP & ATP',
+  'Program Tahunan (Prota)',
+  'Program Semester (Promes)',
+  'KKTP (Kriteria Ketercapaian Tujuan Pembelajaran)',
+  'Jurnal Harian Guru'
+];
+
+const AdminGenerator: React.FC = () => {
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [streamLog, setStreamLog] = useState(''); // State for streaming text
+  const [formData, setFormData] = useState({
+    sekolah: 'YPI Pondok Modern Al-Ghozali',
+    jenjang: 'SMA',
+    kelas: '10',
+    tahunAjaran: '2025/2026',
+    mapel: '',
+    guru: '',
+    topik: '',
+    modeCerdas: false,
+    deadline: '',
+    bahasa: 'Bahasa Indonesia'
+  });
+  
+  const [selectedDocTypes, setSelectedDocTypes] = useState<string[]>(['Modul Ajar']);
+
+  const toggleDocType = (type: string) => {
+    if (selectedDocTypes.includes(type)) {
+      setSelectedDocTypes(selectedDocTypes.filter(t => t !== type));
+    } else {
+      setSelectedDocTypes([...selectedDocTypes, type]);
+    }
+  };
+
+  const toggleAll = () => {
+    if (selectedDocTypes.length === DOC_TYPES.length) {
+      setSelectedDocTypes([]);
+    } else {
+      setSelectedDocTypes(DOC_TYPES);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (selectedDocTypes.length === 0) {
+        alert("Pilih minimal satu jenis dokumen.");
+        return;
+    }
+
+    setLoading(true);
+    setStreamLog("Mengirim permintaan ke server AI...");
+    
+    const harakatInstruction = formData.bahasa === 'Bahasa Arab' ? `
+    ATURAN PENULISAN BAHASA ARAB:
+    - SELURUH KONTEN (Tujuan, Materi, Kegiatan) WAJIB menggunakan Bahasa Arab FUSHA dengan HARAKAT LENGKAP (Vocalized Arabic).
+    - Jangan gunakan Arab gundul.
+    - Gunakan istilah pedagogi Arab yang baku (misal: الأَهْدَافُ التَّعْلِيْمِيَّةُ, الأَنْشِطَةُ, التَّقْيِيْمُ).
+    ` : '';
+
+    const prompt = `Buatkan paket dokumen administrasi guru yang terdiri dari: ${selectedDocTypes.join(', ')}.
+    
+    Detail Administrasi:
+    - Nama Sekolah: ${formData.sekolah}
+    - Jenjang: ${formData.jenjang}
+    - Kelas: ${formData.kelas}
+    - Tahun Ajaran: ${formData.tahunAjaran}
+    - Mata Pelajaran: ${formData.mapel}
+    - Guru Pengampu: ${formData.guru}
+    - Topik/Materi: ${formData.topik}
+    - Bahasa Dokumen: ${formData.bahasa}
+    
+    ${harakatInstruction}
+
+    INSTRUKSI FORMAT TABEL & LAYOUT (WAJIB DIPATUHI AGAR RAPI):
+    1. Gunakan tag <table style="width:100%; border-collapse:collapse; border:1px solid black;">.
+    2. Header tabel <th> harus ada background abu-abu tipis (#f0f0f0).
+    3. Cantumkan Nama Sekolah ${formData.sekolah} dan Tahun Ajaran ${formData.tahunAjaran} dengan jelas pada bagian Informasi Umum atau Header setiap dokumen.
+    4. JANGAN MEMBUAT KOLOM TERLALU BANYAK yang menyebabkan tabel melebar keluar halaman.
+    5. Jika tabel panjang (seperti Prota/Promes), pastikan strukturnya efisien.
+    6. Pisahkan setiap dokumen dengan tag <hr style="border: 2px solid black; margin: 30px 0;"> dan Judul Dokumen (<h1>) yang di-center.
+
+    INSTRUKSI KHUSUS NOTASI MATEMATIKA & SAINS:
+    - JANGAN GUNAKAN simbol '^' untuk pangkat. Gunakan <sup> (x<sup>2</sup>).
+    - JANGAN GUNAKAN simbol '_' untuk indeks. Gunakan <sub> (H<sub>2</sub>O).
+
+    ${formData.modeCerdas ? '7. Sertakan analisis mendalam, strategi pembelajaran diferensiasi, dan profil pelajar pancasila untuk setiap bagian yang relevan.' : ''}
+    
+    Output hanya kode HTML body content.`;
+
+    try {
+      const result = await generateTextContentStream(
+          prompt, 
+          (chunk) => {
+             setStreamLog(prev => prev + chunk);
+          },
+          "Anda adalah asisten administrasi guru ahli Kurikulum Merdeka yang sangat rapi dalam membuat tabel."
+      );
+
+      if (result) {
+          // Format Title untuk Nama File: Administrasi [Mapel] Kelas [Kelas]
+          const safeMapel = formData.mapel.replace(/[^a-zA-Z0-9 ]/g, "").trim();
+          const fileTitle = `Administrasi ${safeMapel || 'Guru'} Kelas ${formData.kelas}`;
+
+          localStorage.setItem('lastResult', JSON.stringify({
+            title: fileTitle,
+            content: result,
+            type: 'ADMINISTRASI',
+            date: new Date().toISOString(),
+            deadline: formData.deadline
+          }));
+          navigate('/results');
+      }
+    } catch (error) {
+      alert('Gagal membuat dokumen. Silakan coba lagi.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto">
+      <ProgressModal isOpen={loading} logs={streamLog} />
+      
+      <div className="mb-8">
+        <h1 className="text-3xl font-bold text-white mb-2">Generator Administrasi</h1>
+        <p className="text-slate-400">Buat dokumen Prota, Promes, Modul Ajar, dan ATP secara massal.</p>
+      </div>
+
+      <Card>
+        <form onSubmit={handleSubmit} className="space-y-8">
+          <div className="grid md:grid-cols-2 gap-6">
+             {/* Basic Info Section */}
+             <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-indigo-400 border-b border-slate-700 pb-2">Informasi Umum</h3>
+                
+                <div className="flex flex-col gap-1">
+                    <label className="text-sm text-slate-400 flex items-center gap-2">
+                         <Building2 size={14} /> Nama Sekolah
+                    </label>
+                    <input 
+                        className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                        value={formData.sekolah}
+                        onChange={(e) => setFormData({...formData, sekolah: e.target.value})}
+                        placeholder="Masukkan nama sekolah..."
+                    />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <div className="flex flex-col gap-1">
+                        <label className="text-sm text-slate-400">Jenjang</label>
+                        <select 
+                            className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                            value={formData.jenjang}
+                            onChange={(e) => setFormData({...formData, jenjang: e.target.value})}
+                        >
+                            <option value="SD">SD / MI</option>
+                            <option value="SMP">SMP / MTs</option>
+                            <option value="SMA">SMA / MA</option>
+                            <option value="Pesantren">Pesantren</option>
+                        </select>
+                    </div>
+                    <Input 
+                        label="Kelas" 
+                        placeholder="Contoh: 10"
+                        value={formData.kelas}
+                        onChange={(e) => setFormData({...formData, kelas: e.target.value})}
+                    />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                    <Input 
+                        label="Tahun Ajaran" 
+                        placeholder="Contoh: 2025/2026"
+                        value={formData.tahunAjaran}
+                        onChange={(e) => setFormData({...formData, tahunAjaran: e.target.value})}
+                    />
+                    <Select 
+                        label="Bahasa Dokumen" 
+                        value={formData.bahasa} 
+                        onChange={(e) => setFormData({...formData, bahasa: e.target.value})}
+                    >
+                        <option value="Bahasa Indonesia">Bahasa Indonesia</option>
+                        <option value="Bahasa Arab">Bahasa Arab (العربية)</option>
+                        <option value="Bahasa Inggris">Bahasa Inggris (English)</option>
+                        <option value="Bahasa Sunda">Bahasa Sunda</option>
+                    </Select>
+                </div>
+
+                <DataListInput 
+                    label="Mata Pelajaran"
+                    placeholder="Pilih atau ketik mata pelajaran"
+                    value={formData.mapel}
+                    onChange={(val) => setFormData({...formData, mapel: val})}
+                    options={SUBJECTS}
+                    required
+                />
+
+                <DataListInput 
+                    label="Nama Guru"
+                    placeholder="Pilih atau ketik nama guru"
+                    value={formData.guru}
+                    onChange={(val) => setFormData({...formData, guru: val})}
+                    options={TEACHERS}
+                />
+
+                <Input 
+                    label="Topik / Materi Pokok" 
+                    placeholder="Contoh: Teks Eksposisi"
+                    value={formData.topik}
+                    onChange={(e) => setFormData({...formData, topik: e.target.value})}
+                    required
+                />
+
+                <div className="flex flex-col gap-1">
+                    <label className="text-sm text-slate-400 flex items-center gap-2">
+                        <Calendar size={14} /> Tenggat Waktu (Deadline)
+                    </label>
+                    <input 
+                        type="date"
+                        className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
+                        value={formData.deadline}
+                        onChange={(e) => setFormData({...formData, deadline: e.target.value})}
+                    />
+                    <span className="text-xs text-slate-500">Tandai di kalender untuk pengingat.</span>
+                </div>
+             </div>
+
+             {/* Document Selection Section */}
+             <div className="space-y-4">
+                <div className="flex justify-between items-center border-b border-slate-700 pb-2">
+                    <h3 className="text-lg font-semibold text-indigo-400">Pilih Dokumen</h3>
+                    <button 
+                        type="button" 
+                        onClick={toggleAll}
+                        className="text-xs text-slate-400 hover:text-white transition-colors"
+                    >
+                        {selectedDocTypes.length === DOC_TYPES.length ? 'Batal Pilih Semua' : 'Pilih Semua'}
+                    </button>
+                </div>
+                
+                <div className="grid grid-cols-1 gap-3">
+                    {DOC_TYPES.map((type) => {
+                        const isChecked = selectedDocTypes.includes(type);
+                        return (
+                            <div 
+                                key={type}
+                                onClick={() => toggleDocType(type)}
+                                className={`flex items-center gap-3 p-3 rounded-lg border cursor-pointer transition-all ${
+                                    isChecked 
+                                    ? 'bg-indigo-600/20 border-indigo-500 text-white' 
+                                    : 'bg-slate-800 border-slate-700 text-slate-400 hover:border-slate-600'
+                                }`}
+                            >
+                                {isChecked ? <CheckSquare size={20} className="text-indigo-400" /> : <Square size={20} />}
+                                <span className="font-medium">{type}</span>
+                            </div>
+                        );
+                    })}
+                </div>
+
+                <div className="flex items-center gap-3 p-4 bg-indigo-900/20 border border-indigo-500/30 rounded-lg mt-4">
+                    <input 
+                        type="checkbox" 
+                        id="smartMode" 
+                        className="w-5 h-5 rounded border-slate-600 text-indigo-600 focus:ring-indigo-500 bg-slate-700"
+                        checked={formData.modeCerdas}
+                        onChange={(e) => setFormData({...formData, modeCerdas: e.target.checked})}
+                    />
+                    <label htmlFor="smartMode" className="flex items-center gap-2 cursor-pointer text-sm text-slate-200">
+                    <Sparkles size={16} className="text-yellow-400" />
+                    <span><strong>Mode Cerdas:</strong> Hasil lebih detail (Proses lebih lama)</span>
+                    </label>
+                </div>
+             </div>
+          </div>
+
+          <Button type="submit" className="w-full h-14 text-lg font-bold shadow-xl" disabled={loading}>
+            {`Generate ${selectedDocTypes.length > 0 ? selectedDocTypes.length : ''} Dokumen Terpilih`}
+          </Button>
+        </form>
+      </Card>
+    </div>
+  );
+};
+
+export default AdminGenerator;
