@@ -80,70 +80,97 @@ const getMockAdminContent = (prompt: string) => {
 
 const getMockQuestionContent = (prompt: string) => {
     return `
-    <h1 style="text-align:center;">NASKAH SOAL UJIAN (SIMULASI)</h1>
-    <h3 style="text-align:center;">Tahun Ajaran: 2025/2026</h3>
-    <hr style="border-top: 2px solid black; margin: 20px 0;">
+    <div style="border: 1px solid black; padding: 0; margin-bottom: 20px; font-family: 'Times New Roman', serif;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid black;">
+                <td style="width: 20%; text-align: center; padding: 10px; border-right: 1px solid black;">
+                   <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Logo_YPI_Al-Ghozali.png" alt="Logo" width="90" height="90" style="display:block; margin:auto;">
+                   <br><span style="font-size:10px;">YPI AL-GHOZALI</span>
+                </td>
+                <td style="width: 80%; text-align: center; padding: 5px;">
+                    <h3 style="margin:0; font-size: 14pt; font-weight: normal;">YAYASAN PENDIDIKAN ISLAM PONDOK MODERN AL-GHOZALI</h3>
+                    <h2 style="margin:5px 0; font-size: 18pt; font-weight: bold;">SMA ISLAM AL-GHOZALI</h2>
+                    <p style="margin:0; font-size: 10pt;">Telp. (0251) 8614072, e-mail: smaislamalghozalisma@ymail.com</p>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: center; border-bottom: 1px solid black; padding: 8px; background-color: #fff;">
+            <h3 style="margin: 0; font-size: 14pt; font-weight: bold; letter-spacing: 1px;">PENILAIAN SUMATIF AKHIR SEMESTER GANJIL</h3>
+            <h4 style="margin: 5px 0 0 0; font-size: 12pt; font-weight: bold;">TAHUN PELAJARAN 2025-2026</h4>
+        </div>
+        <div style="padding: 10px;">
+            <table style="width: 100%; font-size: 12pt; border: none;">
+                <tr>
+                    <td style="width: 15%; font-weight: bold;">Mata Pelajaran</td>
+                    <td style="width: 35%;">: Sosiologi (Simulasi)</td>
+                    <td style="width: 15%; font-weight: bold;">Hari/Tanggal</td>
+                    <td style="width: 35%;">: ....................................</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Kelas</td>
+                    <td>: X (Sepuluh)</td>
+                    <td style="font-weight: bold;">Jam Ke-</td>
+                    <td>: ....................................</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Waktu</td>
+                    <td>: 90 Menit</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
 
-    <h3>I. Pilihan Ganda</h3>
+    <h3>A. PILIHAN GANDA</h3>
+    <p><em>Berilah tanda silang (X) pada huruf A, B, C, D, atau E pada jawaban yang benar!</em></p>
     <ol>
         <li>
-            Berikut ini yang merupakan definisi dari konsep materi yang dipelajari adalah...
-            <ol type="A">
-                <li>Jawaban pengecoh pertama yang terdengar logis</li>
-                <li>Jawaban pengecoh kedua yang mirip</li>
-                <li><strong>Jawaban yang benar dan tepat sesuai teori</strong></li>
-                <li>Jawaban pengecoh ketiga</li>
-                <li>Jawaban pengecoh keempat</li>
+            Sosiologi disebut sebagai ilmu pengetahuan yang empiris karena didasarkan pada...
+            <ol type="A" style="list-style-type: upper-alpha;">
+                <li>Pemikiran logis dan akal sehat</li>
+                <li>Keyakinan masyarakat</li>
+                <li><strong>Observasi terhadap kenyataan dan tidak spekulatif</strong></li>
+                <li>Data statistik kependudukan</li>
+                <li>Teori masa lalu</li>
             </ol>
         </li>
         <br>
         <li>
-            Perhatikan data berikut ini! (1) Data A, (2) Data B. Analisis yang tepat adalah...
-            <ol type="A">
-                <li>Hanya (1) yang benar</li>
-                <li>Hanya (2) yang benar</li>
+            Perhatikan pernyataan berikut! (1) Perubahan iklim, (2) Kemiskinan di kota besar. Manakah yang termasuk objek kajian sosiologi?
+            <ol type="A" style="list-style-type: upper-alpha;">
+                <li>Hanya (1)</li>
+                <li><strong>Hanya (2) karena berkaitan dengan masalah sosial</strong></li>
+                <li>Keduanya benar</li>
                 <li>Keduanya salah</li>
-                <li><strong>Keduanya benar dan saling berhubungan</strong></li>
-                <li>Tidak ada hubungan</li>
-            </ol>
-        </li>
-        <br>
-        <li>
-            Contoh soal ketiga dengan tingkat kesulitan HOTS (Higher Order Thinking Skills)...
-            <ol type="A">
-                <li>Opsi A</li>
-                <li>Opsi B</li>
-                <li>Opsi C</li>
-                <li>Opsi D</li>
-                <li>Opsi E</li>
+                <li>Semua jawaban ragu-ragu</li>
             </ol>
         </li>
     </ol>
 
-    <h3>II. Uraian</h3>
+    <h3>B. URAIAN</h3>
     <ol>
-        <li>Jelaskan definisi materi secara komprehensif!</li>
-        <li>Analisis perbedaan antara konsep A dan konsep B!</li>
-        <li>Berikan 3 contoh implementasi dalam kehidupan sehari-hari!</li>
+        <li>Jelaskan fungsi Sosiologi dalam perencanaan sosial!</li>
+        <li>Sebutkan 3 ciri-ciri sosiologi sebagai ilmu pengetahuan!</li>
     </ol>
 
     <hr>
-    <h3>Kunci Jawaban & Rubrik</h3>
+    <h3>Kunci Jawaban (Simulasi)</h3>
     <table style="width:100%; border-collapse:collapse; border:1px solid black;">
         <tr style="background-color:#f0f0f0;">
             <th style="border:1px solid black;">No</th>
             <th style="border:1px solid black;">Kunci</th>
-            <th style="border:1px solid black;">Pembahasan Singkat</th>
+            <th style="border:1px solid black;">Skor</th>
         </tr>
         <tr>
             <td style="border:1px solid black; text-align:center;">1</td>
             <td style="border:1px solid black; text-align:center;">C</td>
-            <td style="border:1px solid black;">Definisi sesuai buku teks halaman 10.</td>
+            <td style="border:1px solid black; text-align:center;">10</td>
         </tr>
         <tr>
             <td style="border:1px solid black; text-align:center;">2</td>
-            <td style="border:1px solid black; text-align:center;">D</td>
-            <td style="border:1px solid black;">Analisis kausalitas antara data A dan B.</td>
+            <td style="border:1px solid black; text-align:center;">B</td>
+            <td style="border:1px solid black; text-align:center;">10</td>
         </tr>
     </table>
     `;

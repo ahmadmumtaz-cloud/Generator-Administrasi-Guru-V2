@@ -12,10 +12,10 @@ const QuestionBankGenerator: React.FC = () => {
   const [streamLog, setStreamLog] = useState('');
   
   const [formData, setFormData] = useState({
-    sekolah: 'YPI Pondok Modern Al-Ghozali',
+    sekolah: 'SMA ISLAM AL-GHOZALI',
     jenjang: 'SMA',
     kelas: '10',
-    tahunAjaran: '2025/2026',
+    tahunAjaran: '2025-2026',
     mapel: '',
     topik: '',
     difficulty: 'Sedang',
@@ -86,7 +86,52 @@ const QuestionBankGenerator: React.FC = () => {
         `;
     }
 
-    let prompt = `Bertindaklah sebagai ahli pembuat soal profesional. Buatkan **Paket Asesmen Lengkap** untuk:
+    // Header Template String
+    const headerTemplate = `
+    <div style="border: 1px solid black; padding: 0; margin-bottom: 20px; font-family: 'Times New Roman', serif;">
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr style="border-bottom: 1px solid black;">
+                <td style="width: 20%; text-align: center; padding: 10px; border-right: 1px solid black;">
+                   <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Logo_YPI_Al-Ghozali.png" alt="Logo" width="90" height="90" style="display:block; margin:auto;">
+                   <br><span style="font-size:10px;">YPI AL-GHOZALI</span>
+                </td>
+                <td style="width: 80%; text-align: center; padding: 5px;">
+                    <h3 style="margin:0; font-size: 14pt; font-weight: normal;">YAYASAN PENDIDIKAN ISLAM PONDOK MODERN AL-GHOZALI</h3>
+                    <h2 style="margin:5px 0; font-size: 18pt; font-weight: bold;">${formData.sekolah.toUpperCase()}</h2>
+                    <p style="margin:0; font-size: 10pt;">Telp. (0251) 8614072, e-mail: smaislamalghozalisma@ymail.com</p>
+                </td>
+            </tr>
+        </table>
+        <div style="text-align: center; border-bottom: 1px solid black; padding: 8px; background-color: #fff;">
+            <h3 style="margin: 0; font-size: 14pt; font-weight: bold; letter-spacing: 1px;">PENILAIAN SUMATIF AKHIR SEMESTER GANJIL</h3>
+            <h4 style="margin: 5px 0 0 0; font-size: 12pt; font-weight: bold;">TAHUN PELAJARAN ${formData.tahunAjaran}</h4>
+        </div>
+        <div style="padding: 10px;">
+            <table style="width: 100%; font-size: 12pt; border: none;">
+                <tr>
+                    <td style="width: 15%; font-weight: bold;">Mata Pelajaran</td>
+                    <td style="width: 35%;">: ${formData.mapel}</td>
+                    <td style="width: 15%; font-weight: bold;">Hari/Tanggal</td>
+                    <td style="width: 35%;">: ....................................</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Kelas</td>
+                    <td>: ${formData.kelas}</td>
+                    <td style="font-weight: bold;">Jam Ke-</td>
+                    <td>: ....................................</td>
+                </tr>
+                <tr>
+                    <td style="font-weight: bold;">Waktu</td>
+                    <td>: 90 Menit</td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    `;
+
+    let prompt = `Bertindaklah sebagai ahli pembuat soal profesional di YPI Al-Ghozali. Buatkan **Paket Asesmen Lengkap** untuk:
     - Nama Sekolah: **${formData.sekolah}**
     - Jenjang: **${formData.jenjang}**
     - Kelas: **${formData.kelas}**
@@ -97,34 +142,22 @@ const QuestionBankGenerator: React.FC = () => {
     
     ${distributionPrompt}
 
-    PENGATURAN OPSI JAWABAN (PENTING & STRICT):
-    - HINDARI LABEL GANDA.
-    - SALAH: "A. A. Jawaban" atau "A. a. Jawaban".
-    - BENAR: "A. Jawaban".
-    - Gunakan tag HTML <ol type="A"> untuk opsi jawaban agar penomoran otomatis rapi dan tidak dobel.
-    - Buatkan **${formData.pgOptionCount} opsi jawaban** per soal.
+    PENGATURAN OPSI JAWABAN (STRICT & WAJIB):
+    1. Gunakan tag HTML: <ol type="A" style="list-style-type: upper-alpha;">
+       Ini WAJIB agar saat di-export ke Word, opsinya tetap A, B, C, D, E (bukan angka 1, 2, 3).
+    2. Buatkan **${formData.pgOptionCount} opsi jawaban** per soal.
 
-    TINGKAT KESULITAN:
-    - ${formData.difficulty}
-    ${formData.difficulty === 'Sulit (HOTS)' ? '(Prioritaskan stimulus data, grafik, dan studi kasus)' : ''}
+    INSTRUKSI LAYOUT & HEADER (KOP SOAL):
+    - JANGAN BUAT HEADER SENDIRI.
+    - GUNAKAN KODE HTML BERIKUT SECARA PERSIS UNTUK BAGIAN ATAS DOKUMEN:
+    ${headerTemplate}
 
-    INSTRUKSI STYLE & LAYOUT (CSS MINIMALIS & RAPI):
-    - Gunakan Font: Times New Roman, serif (Standar Akademik).
-    - Warna: HITAM PUTIH (Grayscale) sepenuhnya. JANGAN gunakan background-color warna-warni pada tabel/header.
-    - HEADER SOAL: Buatkan kop surat sederhana di tengah (center) yang berisi NAMA SEKOLAH (${formData.sekolah}), Mata Pelajaran, Kelas, dan Tahun Ajaran ${formData.tahunAjaran}.
-    - TABEL KISI-KISI: WAJIB gunakan <table style="width:100%; border-collapse:collapse; border:1px solid black;">.
-    - Layout: Bersih, Rapi, Siap Cetak (Print Friendly) di kertas A4 dengan margin standar.
+    INSTRUKSI KONTEN:
+    1. NASKAH SOAL (Gunakan <ol> untuk nomor soal, dan <ol type="A" style="list-style-type: upper-alpha;"> untuk opsi)
+    2. KUNCI JAWABAN (Di akhir dokumen, pisahkan dengan garis)
 
-    INSTRUKSI PENULISAN NOTASI (WAJIB):
-    1. PANGKAT: Gunakan HTML <sup> (x<sup>2</sup>). JANGAN '^'.
-    2. INDEKS: Gunakan HTML <sub> (H<sub>2</sub>O). JANGAN '_'.
-
-    TUGAS ANDA ADALAH MENGHASILKAN DOKUMEN LENGKAP DALAM SATU OUTPUT HTML:
-    1. NASKAH SOAL (Gunakan <ol> untuk nomor soal, dan <ol type="A"> untuk opsi)
-    2. KISI-KISI SOAL (Tabel Hitam Putih Rapi)
-    3. KUNCI JAWABAN & PEMBAHASAN DETAIL
-    4. RUBRIK PENILAIAN
-
+    TUGAS ANDA:
+    Generate body content HTML lengkap mulai dari Header yang saya berikan di atas, dilanjutkan dengan Naskah Soal, lalu Kunci Jawaban.
     Gunakan Bahasa Indonesia yang baku (kecuali mapel bahasa asing).
     `;
 
@@ -135,7 +168,6 @@ const QuestionBankGenerator: React.FC = () => {
           "Anda adalah pembuat soal ujian standar nasional yang sangat rapi."
       );
       if (result) {
-          // Format Title untuk Nama File: Bank Soal [Mapel] Kelas [Kelas]
           const safeMapel = formData.mapel.replace(/[^a-zA-Z0-9 ]/g, "").trim();
           const fileTitle = `Bank Soal ${safeMapel || 'Umum'} Kelas ${formData.kelas}`;
 
@@ -164,7 +196,7 @@ const QuestionBankGenerator: React.FC = () => {
         </div>
         <div>
             <h1 className="text-3xl font-bold text-white mb-1">Bank Soal Adaptif</h1>
-            <p className="text-slate-400">Generator soal standar nasional (SD/SMP/SMA) dengan fitur HOTS & AKM.</p>
+            <p className="text-slate-400">Generator soal standar YPI Al-Ghozali dengan Header Resmi.</p>
         </div>
       </div>
 
@@ -179,11 +211,10 @@ const QuestionBankGenerator: React.FC = () => {
                     className="bg-slate-800 border border-slate-700 rounded-lg px-4 py-2.5 text-slate-100 focus:outline-none focus:ring-2 focus:ring-indigo-500 w-full"
                     value={formData.sekolah}
                     onChange={(e) => setFormData({...formData, sekolah: e.target.value})}
-                    placeholder="Masukkan nama sekolah..."
+                    placeholder="Contoh: SMA ISLAM AL-GHOZALI"
                 />
           </div>
 
-          {/* Basic Info */}
           <div className="grid grid-cols-2 gap-4">
               <Select label="Jenjang" value={formData.jenjang} onChange={(e) => setFormData({...formData, jenjang: e.target.value})}>
                   <option value="SD">SD / MI</option>
@@ -233,7 +264,6 @@ const QuestionBankGenerator: React.FC = () => {
             required
           />
 
-          {/* Question Distribution Section */}
           <div className="bg-slate-800/50 p-4 rounded-xl border border-slate-700 space-y-4">
               <div className="flex items-center gap-2 mb-2 border-b border-slate-700 pb-2">
                   <Calculator size={18} className="text-indigo-400" />
@@ -292,7 +322,6 @@ const QuestionBankGenerator: React.FC = () => {
               )}
           </div>
 
-          {/* Settings Section */}
           <div className="grid grid-cols-2 gap-4">
               <Select label="Opsi Jawaban PG" value={formData.pgOptionCount} onChange={(e) => setFormData({...formData, pgOptionCount: e.target.value})}>
                   <option value="3">3 Opsi (A, B, C)</option>

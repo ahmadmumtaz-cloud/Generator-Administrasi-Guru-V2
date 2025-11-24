@@ -71,6 +71,12 @@ const Results: React.FC = () => {
             color: #000000;
         }
         
+        /* LIST STYLES FIX FOR WORD */
+        ol { list-style-type: decimal; margin-left: 1.5em; padding-left: 0.5em; }
+        ol[type="A"], ol[style*="upper-alpha"] { list-style-type: upper-alpha !important; }
+        ol[type="a"] { list-style-type: lower-alpha !important; }
+        li { margin-bottom: 0.3em; }
+
         /* SUPERSCRIPT / SUBSCRIPT */
         sup { vertical-align: super; font-size: smaller; }
         sub { vertical-align: sub; font-size: smaller; }
@@ -221,9 +227,9 @@ const Results: React.FC = () => {
                             onChange={(e) => setContent(e.target.value)}
                         />
                     ) : (
-                        /* Preview Container with specific padding to mimic A4 */
+                        /* Preview Container with specific padding and forced list styles */
                         <div 
-                            className="prose max-w-none p-8 md:p-12 bg-white shadow-sm text-black [&_*]:text-black"
+                            className="prose max-w-none p-8 md:p-12 bg-white shadow-sm text-black [&_*]:text-black [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol[type='A']]:list-[upper-alpha] [&_ol[style*='upper-alpha']]:list-[upper-alpha]"
                             style={{ minHeight: '29.7cm', color: 'black' }}
                             dangerouslySetInnerHTML={{ __html: content }}
                         />
