@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from 'react';
 import { GeneratedResult } from '../types';
 import { Card, Button } from '../components/UI';
@@ -41,11 +40,11 @@ const Results: React.FC = () => {
             font-family: 'Times New Roman', serif;
             font-size: 12pt;
             line-height: 1.5;
-            color: #000000;
-            background: #fff;
+            color: #000000 !important;
+            background: #fff !important;
         }
-        h1, h2, h3 { text-align: center; margin-bottom: 1em; color: #000000; }
-        p, li, span, div { color: #000000; }
+        h1, h2, h3, h4, h5 { text-align: center; margin-bottom: 1em; color: #000000 !important; }
+        p, li, span, div { color: #000000 !important; }
         
         /* TABEL SUPER RAPI */
         table {
@@ -54,26 +53,29 @@ const Results: React.FC = () => {
             border-spacing: 0;
             margin-bottom: 1em;
             table-layout: fixed; /* Memaksa tabel patuh pada lebar halaman */
-            color: #000000;
+            color: #000000 !important;
         }
         th, td {
-            border: 1px solid #000; /* Border Hitam Tegas */
+            border: 1px solid #000 !important; /* Border Hitam Tegas */
             padding: 6px 8px;
             vertical-align: top;
             word-wrap: break-word; /* Mencegah teks panjang menabrak margin */
             overflow-wrap: break-word;
-            color: #000000;
+            color: #000000 !important;
         }
         th {
-            background-color: #f0f0f0; /* Abu-abu tipis untuk header agar jelas */
+            background-color: #f0f0f0 !important; /* Abu-abu tipis untuk header agar jelas */
             font-weight: bold;
             text-align: center;
-            color: #000000;
+            color: #000000 !important;
         }
         
         /* LIST STYLES FIX FOR WORD */
         ol { list-style-type: decimal; margin-left: 1.5em; padding-left: 0.5em; }
+        
+        /* FORCE A, B, C, D for Options */
         ol[type="A"], ol[style*="upper-alpha"] { list-style-type: upper-alpha !important; }
+        
         ol[type="a"] { list-style-type: lower-alpha !important; }
         li { margin-bottom: 0.3em; }
 
@@ -227,7 +229,7 @@ const Results: React.FC = () => {
                             onChange={(e) => setContent(e.target.value)}
                         />
                     ) : (
-                        /* Preview Container with specific padding and forced list styles */
+                        /* Preview Container with forced black text */
                         <div 
                             className="prose max-w-none p-8 md:p-12 bg-white shadow-sm text-black [&_*]:text-black [&_ol]:list-decimal [&_ol]:pl-5 [&_ul]:list-disc [&_ul]:pl-5 [&_ol[type='A']]:list-[upper-alpha] [&_ol[style*='upper-alpha']]:list-[upper-alpha]"
                             style={{ minHeight: '29.7cm', color: 'black' }}

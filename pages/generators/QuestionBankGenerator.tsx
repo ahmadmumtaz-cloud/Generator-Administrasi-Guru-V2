@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Input, Select, Button, DataListInput, ProgressModal } from '../../components/UI';
@@ -86,16 +85,16 @@ const QuestionBankGenerator: React.FC = () => {
         `;
     }
 
-    // Header Template String
+    // STRICT AL-GHOZALI HEADER TEMPLATE AS REQUESTED
     const headerTemplate = `
     <div style="border: 1px solid black; padding: 0; margin-bottom: 20px; font-family: 'Times New Roman', serif;">
-        <table style="width: 100%; border-collapse: collapse;">
+        <table style="width: 100%; border-collapse: collapse; border: none;">
             <tr style="border-bottom: 1px solid black;">
-                <td style="width: 20%; text-align: center; padding: 10px; border-right: 1px solid black;">
+                <td style="width: 20%; text-align: center; padding: 10px; border-right: 1px solid black; border-left: none; border-top: none;">
                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Logo_YPI_Al-Ghozali.png" alt="Logo" width="90" height="90" style="display:block; margin:auto;">
                    <br><span style="font-size:10px;">YPI AL-GHOZALI</span>
                 </td>
-                <td style="width: 80%; text-align: center; padding: 5px;">
+                <td style="width: 80%; text-align: center; padding: 5px; border: none;">
                     <h3 style="margin:0; font-size: 14pt; font-weight: normal;">YAYASAN PENDIDIKAN ISLAM PONDOK MODERN AL-GHOZALI</h3>
                     <h2 style="margin:5px 0; font-size: 18pt; font-weight: bold;">${formData.sekolah.toUpperCase()}</h2>
                     <p style="margin:0; font-size: 10pt;">Telp. (0251) 8614072, e-mail: smaislamalghozalisma@ymail.com</p>
@@ -109,22 +108,22 @@ const QuestionBankGenerator: React.FC = () => {
         <div style="padding: 10px;">
             <table style="width: 100%; font-size: 12pt; border: none;">
                 <tr>
-                    <td style="width: 15%; font-weight: bold;">Mata Pelajaran</td>
-                    <td style="width: 35%;">: ${formData.mapel}</td>
-                    <td style="width: 15%; font-weight: bold;">Hari/Tanggal</td>
-                    <td style="width: 35%;">: ....................................</td>
+                    <td style="width: 15%; font-weight: bold; border: none;">Mata Pelajaran</td>
+                    <td style="width: 35%; border: none;">: ${formData.mapel}</td>
+                    <td style="width: 15%; font-weight: bold; border: none;">Hari/Tanggal</td>
+                    <td style="width: 35%; border: none;">: ....................................</td>
                 </tr>
                 <tr>
-                    <td style="font-weight: bold;">Kelas</td>
-                    <td>: ${formData.kelas}</td>
-                    <td style="font-weight: bold;">Jam Ke-</td>
-                    <td>: ....................................</td>
+                    <td style="font-weight: bold; border: none;">Kelas</td>
+                    <td style="border: none;">: ${formData.kelas}</td>
+                    <td style="font-weight: bold; border: none;">Jam Ke-</td>
+                    <td style="border: none;">: ....................................</td>
                 </tr>
                 <tr>
-                    <td style="font-weight: bold;">Waktu</td>
-                    <td>: 90 Menit</td>
-                    <td></td>
-                    <td></td>
+                    <td style="font-weight: bold; border: none;">Waktu</td>
+                    <td style="border: none;">: 90 Menit</td>
+                    <td style="border: none;"></td>
+                    <td style="border: none;"></td>
                 </tr>
             </table>
         </div>
@@ -152,12 +151,16 @@ const QuestionBankGenerator: React.FC = () => {
     - GUNAKAN KODE HTML BERIKUT SECARA PERSIS UNTUK BAGIAN ATAS DOKUMEN:
     ${headerTemplate}
 
-    INSTRUKSI KONTEN:
-    1. NASKAH SOAL (Gunakan <ol> untuk nomor soal, dan <ol type="A" style="list-style-type: upper-alpha;"> untuk opsi)
-    2. KUNCI JAWABAN (Di akhir dokumen, pisahkan dengan garis)
+    INSTRUKSI KONTEN (WAJIB ADA 6 BAGIAN):
+    Generate body content HTML lengkap yang terdiri dari 6 Bagian Utama:
+    1. NASKAH SOAL (Gunakan <ol> untuk nomor soal, dan <ol type="A" style="list-style-type: upper-alpha;"> untuk opsi).
+    2. KISI-KISI PENULISAN SOAL (Tabel: No, KD, Materi, Indikator, Level Kognitif, No Soal).
+    3. KUNCI JAWABAN & PEMBAHASAN (Tabel).
+    4. ANALISIS SOAL KUALITATIF (Tabel aspek penelaahan materi/konstruksi/bahasa).
+    5. RUBRIK PENILAIAN/PENSKORAN (Rumus nilai akhir).
+    6. RINGKASAN MATERI (Rangkuman singkat materi yang diujikan).
 
-    TUGAS ANDA:
-    Generate body content HTML lengkap mulai dari Header yang saya berikan di atas, dilanjutkan dengan Naskah Soal, lalu Kunci Jawaban.
+    Pisahkan setiap bagian dengan <hr style="border: 2px solid black; margin: 30px 0;">.
     Gunakan Bahasa Indonesia yang baku (kecuali mapel bahasa asing).
     `;
 
@@ -196,7 +199,7 @@ const QuestionBankGenerator: React.FC = () => {
         </div>
         <div>
             <h1 className="text-3xl font-bold text-white mb-1">Bank Soal Adaptif</h1>
-            <p className="text-slate-400">Generator soal standar YPI Al-Ghozali dengan Header Resmi.</p>
+            <p className="text-slate-400">Generator soal standar YPI Al-Ghozali dengan Header Resmi & Paket Lengkap.</p>
         </div>
       </div>
 
@@ -337,7 +340,7 @@ const QuestionBankGenerator: React.FC = () => {
           </div>
 
           <Button type="submit" className="w-full h-12 shadow-lg shadow-indigo-500/20" disabled={loading}>
-             Generate Bank Soal Umum
+             Generate Bank Soal Lengkap (6 Dokumen)
           </Button>
         </form>
       </Card>

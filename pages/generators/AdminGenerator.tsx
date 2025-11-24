@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Input, Button, DataListInput, Select, ProgressModal } from '../../components/UI';
@@ -84,7 +83,7 @@ const AdminGenerator: React.FC = () => {
     INSTRUKSI FORMAT TABEL & LAYOUT (WAJIB DIPATUHI AGAR RAPI):
     1. Gunakan tag <table style="width:100%; border-collapse:collapse; border:1px solid black;">.
     2. Header tabel <th> harus ada background abu-abu tipis (#f0f0f0).
-    3. Cantumkan Nama Sekolah ${formData.sekolah} dan Tahun Ajaran ${formData.tahunAjaran} dengan jelas pada bagian Informasi Umum atau Header setiap dokumen.
+    3. Cantumkan Nama Sekolah "${formData.sekolah}" dan Tahun Ajaran "${formData.tahunAjaran}" dengan jelas pada bagian Informasi Umum atau Header setiap dokumen.
     4. JANGAN MEMBUAT KOLOM TERLALU BANYAK yang menyebabkan tabel melebar keluar halaman.
     5. Jika tabel panjang (seperti Prota/Promes), pastikan strukturnya efisien.
     6. Pisahkan setiap dokumen dengan tag <hr style="border: 2px solid black; margin: 30px 0;"> dan Judul Dokumen (<h1>) yang di-center.
