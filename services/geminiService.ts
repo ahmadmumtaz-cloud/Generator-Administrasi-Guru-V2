@@ -84,27 +84,27 @@ const getMockAdminContent = (prompt: string) => {
 const getMockQuestionContent = (prompt: string) => {
     return `
     <div style="font-family: 'Times New Roman', serif; color: #000000;">
-        <!-- 1. HEADER AL-GHOZALI -->
+        <!-- 1. HEADER AL-GHOZALI (Fixed Size) -->
         <div style="border: 1px solid black; padding: 0; margin-bottom: 20px;">
             <table style="width: 100%; border-collapse: collapse; border: none;">
                 <tr style="border-bottom: 1px solid black;">
-                    <td style="width: 20%; text-align: center; padding: 10px; border-right: 1px solid black; border-left: none; border-top: none;">
-                       <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Logo_YPI_Al-Ghozali.png" alt="Logo" width="90" height="90" style="display:block; margin:auto;">
-                       <br><span style="font-size:10px;">YPI AL-GHOZALI</span>
+                    <td style="width: 15%; text-align: center; padding: 5px; border-right: 1px solid black; border-left: none; border-top: none;">
+                       <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/Logo_YPI_Al-Ghozali.png" alt="Logo" width="80" height="80" style="display:block; margin:auto;">
+                       <br><span style="font-size:9px;">YPI AL-GHOZALI</span>
                     </td>
-                    <td style="width: 80%; text-align: center; padding: 5px; border: none;">
-                        <h3 style="margin:0; font-size: 14pt; font-weight: normal;">YAYASAN PENDIDIKAN ISLAM PONDOK MODERN AL-GHOZALI</h3>
-                        <h2 style="margin:5px 0; font-size: 18pt; font-weight: bold;">SMA ISLAM AL-GHOZALI</h2>
-                        <p style="margin:0; font-size: 10pt;">Telp. (0251) 8614072, e-mail: smaislamalghozalisma@ymail.com</p>
+                    <td style="width: 85%; text-align: center; padding: 5px; border: none;">
+                        <h3 style="margin:0; font-size: 11pt; font-weight: normal;">YAYASAN PENDIDIKAN ISLAM PONDOK MODERN AL-GHOZALI</h3>
+                        <h2 style="margin:2px 0; font-size: 14pt; font-weight: bold;">SMA ISLAM AL-GHOZALI</h2>
+                        <p style="margin:0; font-size: 9pt;">Telp. (0251) 8614072, e-mail: smaislamalghozalisma@ymail.com</p>
                     </td>
                 </tr>
             </table>
-            <div style="text-align: center; border-bottom: 1px solid black; padding: 8px; background-color: #fff;">
-                <h3 style="margin: 0; font-size: 14pt; font-weight: bold; letter-spacing: 1px;">PENILAIAN SUMATIF AKHIR SEMESTER GANJIL</h3>
-                <h4 style="margin: 5px 0 0 0; font-size: 12pt; font-weight: bold;">TAHUN PELAJARAN 2025-2026</h4>
+            <div style="text-align: center; border-bottom: 1px solid black; padding: 5px; background-color: #fff;">
+                <h3 style="margin: 0; font-size: 12pt; font-weight: bold; letter-spacing: 1px;">PENILAIAN SUMATIF AKHIR SEMESTER GANJIL</h3>
+                <h4 style="margin: 2px 0 0 0; font-size: 11pt; font-weight: bold;">TAHUN PELAJARAN 2025/2026</h4>
             </div>
-            <div style="padding: 10px;">
-                <table style="width: 100%; font-size: 12pt; border: none;">
+            <div style="padding: 8px;">
+                <table style="width: 100%; font-size: 11pt; border: none;">
                     <tr>
                         <td style="width: 15%; font-weight: bold; border: none;">Mata Pelajaran</td>
                         <td style="width: 35%; border: none;">: (Mode Simulasi)</td>
