@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Card, Input, Select, Button, DataListInput, ProgressModal } from '../../components/UI';
@@ -28,14 +29,28 @@ const PesantrenBankGenerator: React.FC = () => {
 
     // INSYA CHECK
     const isInsya = formData.mapel.toLowerCase().includes("insya") || formData.mapel.includes("الإِنْشَاءُ");
+    const isIndo = formData.bahasa === 'Bahasa Indonesia';
+    const direction = isIndo ? 'ltr' : 'rtl';
+    const align = isIndo ? 'left' : 'right';
 
     // HARAKAT INSTRUCTION (STRICT)
-    const harakatInstruction = `
-    ATURAN WAJIB PENULISAN BAHASA ARAB (HARAKAT/SYAKAL):
-    1. SETIAP KATA Bahasa Arab (Soal, Instruksi, Teks Bacaan) WAJIB DIBERI HARAKAT LENGKAP (Fathah, Kasrah, Dhammah, Sukun, Shaddah, Tanwin).
-    2. JANGAN ADA ARAB GUNDUL. Tujuannya agar santri mudah membaca dan tidak salah tafsir.
-    3. Gunakan font standar yang jelas (Traditional Arabic / Amiri).
-    `;
+    let harakatInstruction = '';
+    
+    if (isIndo) {
+        harakatInstruction = `
+        ATURAN PENULISAN:
+        1. Gunakan Bahasa Indonesia untuk instruksi soal dan teks materi.
+        2. Jika terdapat kutipan Ayat Al-Qur'an, Hadits, atau Istilah Fiqih dalam Bahasa Arab, WAJIB DIBERI HARAKAT LENGKAP.
+        3. Format penulisan dimulai dari KIRI ke KANAN (Left-to-Right).
+        `;
+    } else {
+        harakatInstruction = `
+        ATURAN WAJIB PENULISAN BAHASA ARAB (HARAKAT/SYAKAL):
+        1. SETIAP KATA Bahasa Arab (Soal, Instruksi, Teks Bacaan) WAJIB DIBERI HARAKAT LENGKAP (Fathah, Kasrah, Dhammah, Sukun, Shaddah, Tanwin).
+        2. JANGAN ADA ARAB GUNDUL. Tujuannya agar santri mudah membaca dan tidak salah tafsir.
+        3. Gunakan font standar yang jelas (Traditional Arabic / Amiri).
+        `;
+    }
 
     let structurePrompt = "";
 
@@ -53,6 +68,24 @@ const PesantrenBankGenerator: React.FC = () => {
        ب. Bagian Ba: كَوِّنْ جُمَلًا مُفِيدَةً... (Membuat Kalimat - 5 Soal).
        ج. Bagian Jim: اكْتُبْ فِقْرَةً... (Mengarang Paragraf tentang ${formData.topik}).
        د. Bagian Dal: تَرْجِمِ الْجُمَلَ... (Menerjemahkan Indo-Arab - 6 Soal).
+        `;
+    } else if (isIndo) {
+        structurePrompt = `
+    STRUKTUR SOAL PESANTREN (BAHASA INDONESIA - FORMAT A-F):
+    1. HEADER (KOP):
+       - Nama Sekolah: "${formData.sekolah}" (Center).
+       - Judul: "UJIAN PESANTREN / IMTIHAN" (Center).
+       - Tahun Ajaran: ${formData.tahunAjaran}.
+       - Tabel Identitas (Kiri-Kanan): Mata Pelajaran, Kelas, Hari/Tanggal, Waktu.
+
+    2. ISI SOAL (Gunakan penomoran Bagian Huruf Kapital A, B, C, D, E):
+       A. Pilihan Ganda / Isian Singkat (Mufradat/Istilah).
+       B. Pemahaman Materi (Uraian/Essay Fiqih/Aqidah/Sejarah).
+       C. Analisis Dalil / Studi Kasus.
+       D. Terjemah (Arab-Indo atau Indo-Arab jika relevan).
+       E. Hafalan / Mahfudzot (Melengkapi syair/ayat).
+
+       Pastikan setiap bagian diberi Judul Bagian yang jelas (Contoh: "A. Uji Pemahaman Kosakata").
         `;
     } else {
         structurePrompt = `
@@ -82,22 +115,23 @@ const PesantrenBankGenerator: React.FC = () => {
     - Tahun Ajaran (Sanah Dirasiyah): ${formData.tahunAjaran}
     - Mata Pelajaran: ${formData.mapel}
     - Topik Utama: ${formData.topik}
+    - Bahasa Pengantar: ${formData.bahasa}
     
     ${harakatInstruction}
     
-    Output WAJIB format HTML dengan 'dir="rtl"' (Right-to-Left) untuk bagian Arab.
+    Output WAJIB format HTML dengan 'dir="${direction}"' (text-align: ${align}) pada div utama.
     Pastikan semua tabel memiliki style="width:100%; border-collapse:collapse; border:1px solid black;" agar rapi saat dicetak.
     
     ${structurePrompt}
     
-    Pastikan soal relevan, menantang, dan sesuai kaidah Bahasa Arab Fusha.
+    Pastikan soal relevan, menantang, dan sesuai kaidah keilmuan Islam.
     `;
 
     try {
       const result = await generateTextContentStream(
           prompt,
           (chunk) => setStreamLog(prev => prev + chunk),
-          "Anda adalah Ustadz senior yang sangat teliti dalam Nahwu, Shorof, dan Harakat."
+          "Anda adalah Ustadz senior yang sangat teliti dalam ilmu agama."
       );
       if (result) {
           // Format Title untuk Nama File: Soal Pesantren [Mapel] Kelas [Kelas]
@@ -129,7 +163,7 @@ const PesantrenBankGenerator: React.FC = () => {
         </div>
         <div>
             <h1 className="text-3xl font-bold text-white mb-1">Bank Soal Pesantren</h1>
-            <p className="text-slate-400">Generator soal khas Ma'had dengan format Arab Pegon/Gondul/Berharakat & Struktur Alif-Zay.</p>
+            <p className="text-slate-400">Generator soal khas Ma'had. Mendukung Arab Pegon, Kitab Kuning, dan Fiqih Indonesia.</p>
         </div>
       </div>
 
@@ -141,8 +175,8 @@ const PesantrenBankGenerator: React.FC = () => {
                   <BookOpen size={18}/> Mode Kitab / Ma'had
               </h3>
               <p className="text-slate-300 text-sm">
-                  Modul ini khusus menghasilkan soal dengan format <strong>RTL (Kanan-ke-Kiri)</strong>, Kop Surat Bahasa Arab, dan struktur 7 Bagian (Mufradat s/d Mahfudzot).
-                  Semua output otomatis diberi <strong>Harakat Lengkap</strong>.
+                  Jika memilih <strong>Bahasa Arab</strong>, format otomatis RTL (Kanan-ke-Kiri) dengan Harakat (أ، ب، ج). 
+                  Jika memilih <strong>Bahasa Indonesia</strong>, format LTR (Kiri-ke-Kanan) dengan bagian A, B, C, D, E.
               </p>
           </div>
         
@@ -187,7 +221,7 @@ const PesantrenBankGenerator: React.FC = () => {
                 placeholder="Contoh: Nahwu, Fiqih, Insya"
                 value={formData.mapel}
                 onChange={(val) => setFormData({...formData, mapel: val})}
-                options={SUBJECTS.filter(s => s.match(/[\u0600-\u06FF]/))} // Filter subject yang ada arabnya
+                options={SUBJECTS.filter(s => s.match(/[\u0600-\u06FF]/) || s.includes("Fiqih") || s.includes("Aqidah"))} 
                 required
               />
           </div>
@@ -202,7 +236,8 @@ const PesantrenBankGenerator: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-4">
              <Select label="Bahasa Pengantar Soal" value={formData.bahasa} onChange={(e) => setFormData({...formData, bahasa: e.target.value})}>
-                <option value="Bahasa Arab">Bahasa Arab (Full)</option>
+                <option value="Bahasa Arab">Bahasa Arab (Full RTL)</option>
+                <option value="Bahasa Indonesia">Bahasa Indonesia (LTR)</option>
                 <option value="Arab & Indonesia">Campuran (Arab & Indo)</option>
                 <option value="Arab Pegon">Arab Pegon (Jawa/Sunda)</option>
              </Select>

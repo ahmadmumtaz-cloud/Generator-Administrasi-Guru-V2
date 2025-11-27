@@ -1,3 +1,4 @@
+
 import { GoogleGenAI, Modality, GenerateContentResponse } from "@google/genai";
 
 const getAI = () => {
@@ -259,6 +260,53 @@ const getMockQuestionContent = (prompt: string) => {
 };
 
 const getMockPesantrenContent = (prompt: string) => {
+    // Detect language from prompt to serve correct mockup
+    const isIndo = prompt.toLowerCase().includes("bahasa indonesia");
+    const isInsya = prompt.toLowerCase().includes("insya");
+
+    // FORMAT: BAHASA INDONESIA (LTR)
+    if (isIndo && !isInsya) {
+        return `
+        <div style="font-family: 'Times New Roman', serif; font-size: 12pt; color: #000000; text-align: left;" dir="ltr">
+            <h2 style="text-align:center;">YAYASAN PENDIDIKAN ISLAM AL-GHOZALI</h2>
+            <h3 style="text-align:center;">UJIAN PESANTREN (SIMULASI)</h3>
+            <p style="text-align:center;">Tahun Ajaran: 2025/2026</p>
+            <hr style="border: 1px solid black;">
+            
+            <table style="width:100%; border-collapse:collapse; border:1px solid black;">
+                <tr>
+                    <td style="border:1px solid black; padding:5px; font-weight:bold;">Mata Pelajaran</td>
+                    <td style="border:1px solid black; padding:5px;">: Fiqih / Sejarah Islam</td>
+                </tr>
+                <tr>
+                    <td style="border:1px solid black; padding:5px; font-weight:bold;">Kelas</td>
+                    <td style="border:1px solid black; padding:5px;">: 1 Ula</td>
+                </tr>
+            </table>
+            <br>
+
+            <h3>A. Pilihan Ganda / Isian Singkat</h3>
+            <p>Jawablah pertanyaan berikut dengan singkat dan tepat.</p>
+            <ol>
+                <li>Sebutkan rukun Islam yang ketiga!</li>
+                <li>Siapakah khalifah pertama setelah wafatnya Rasulullah SAW?</li>
+            </ol>
+
+            <h3>B. Uraian / Essay</h3>
+            <p>Jelaskan jawaban Anda dengan dalil yang relevan.</p>
+            <ol>
+                <li>Jelaskan perbedaan antara syarat sah dan syarat wajib shalat!</li>
+                <li>Bagaimana strategi dakwah Rasulullah SAW pada periode Mekkah?</li>
+            </ol>
+            
+            <h3>C. Studi Kasus</h3>
+            <p>Analisislah kasus berikut:</p>
+            <p><em>Seseorang lupa jumlah rakaat saat shalat Isya. Apa yang harus dia lakukan menurut pandangan Fiqih Syafi'i? Jelaskan dengan sujud sahwi.</em></p>
+        </div>
+        `;
+    }
+
+    // FORMAT: BAHASA ARAB (RTL) - DEFAULT
     return `
     <div dir="rtl" style="font-family: 'Traditional Arabic', serif; font-size: 18px; color: #000000;">
         <h2 style="text-align:center;">مَعْهَدُ الْغَزَالِي الْعَصْرِيِّ</h2>
